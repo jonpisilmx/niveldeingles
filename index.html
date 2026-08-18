@@ -21,9 +21,9 @@
             --border-color: #E5E7EB;
             --border-hover: #CBD5E1;
             --correct-color: #10B981;
-            --correct-bg: rgba(16, 185, 129, 0.08);
             --wrong-color: #EF4444;
-            --wrong-bg: rgba(239, 68, 68, 0.08);
+            --whatsapp-green: #25D366;
+            --whatsapp-hover: #20BA5A;
             --radius-lg: 20px;
             --radius-md: 12px;
             --radius-sm: 8px;
@@ -283,8 +283,10 @@
             border: none;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             font-family: var(--font-body);
+            text-decoration: none;
         }
 
         .btn-prev {
@@ -309,6 +311,29 @@
             background: var(--accent-coral-hover);
             transform: translateY(-1px);
             box-shadow: 0 6px 18px rgba(229, 67, 34, 0.3);
+        }
+
+        .btn-wa {
+            background: var(--whatsapp-green);
+            color: #FFFFFF;
+            box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25);
+        }
+
+        .btn-wa:hover {
+            background: var(--whatsapp-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(37, 211, 102, 0.35);
+        }
+
+        .btn-outline {
+            background: #FFFFFF;
+            border: 2px solid var(--accent-coral);
+            color: var(--accent-coral);
+        }
+
+        .btn-outline:hover {
+            background: rgba(229, 67, 34, 0.05);
+            transform: translateY(-1px);
         }
 
         .btn:disabled {
@@ -357,7 +382,7 @@
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
             padding: 1.5rem;
-            margin: 1.5rem 0 2rem 0;
+            margin: 1.5rem 0 2.5rem 0;
             text-align: left;
         }
 
@@ -371,44 +396,12 @@
             gap: 8px;
         }
 
-        .review-section {
-            margin-top: 2.5rem;
-            text-align: left;
-            border-top: 1px solid var(--border-color);
-            padding-top: 2rem;
-        }
-
-        .review-item {
-            padding: 1rem;
-            border-radius: var(--radius-sm);
-            margin-bottom: 1rem;
-            background: #FAFAFA;
-            border: 1px solid var(--border-color);
-        }
-
-        .review-item.correct {
-            border-left: 4px solid var(--correct-color);
-            background: var(--correct-bg);
-        }
-
-        .review-item.incorrect {
-            border-left: 4px solid var(--wrong-color);
-            background: var(--wrong-bg);
-        }
-
-        .review-q {
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-        }
-
-        .review-ans {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .review-ans span {
-            font-weight: 700;
+        .results-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 480px;
+            margin: 0 auto;
         }
 
         footer {
@@ -836,10 +829,10 @@
                 </div>
             </form>
 
-            <!-- Results View (Hidden initially) -->
+            <!-- Results View -->
             <div id="results-screen" class="results-container" style="display: none;">
                 <h2 class="page-title">¡Evaluación Completada!</h2>
-                <p class="page-instruction">Aquí tienes el desglose de tu nivel según el Marco Común Europeo de Referencia (CEFR).</p>
+                <p class="page-instruction">Aquí tienes la estimación de tu nivel según el Marco Común Europeo de Referencia (CEFR).</p>
 
                 <div class="score-badge">
                     <span class="score-number" id="final-score">0</span>
@@ -853,11 +846,16 @@
                     </p>
                 </div>
 
-                <button type="button" class="btn btn-next" onclick="resetQuiz()" style="margin-top: 1rem;">Intentar de nuevo</button>
-
-                <div class="review-section">
-                    <h3 class="page-title" style="font-size: 1.2rem; margin-bottom: 1rem;">Desglose de Respuestas</h3>
-                    <div id="review-list"></div>
+                <div class="results-actions">
+                    <a id="wa-btn-link" href="https://wa.me/529581098287?text=Hola,%20hice%20el%20General%20English%20Test%20y%20me%20gustar%C3%ADa%20informaci%C3%B3n%20para%20contratar%20un%20m%C3%B3dulo." target="_blank" class="btn btn-wa">
+                        💬 Contratar un Módulo por WhatsApp
+                    </a>
+                    <a href="https://metodoreplica.online/" class="btn btn-outline">
+                        🌐 Regresar a la Página Principal
+                    </a>
+                    <button type="button" class="btn btn-prev" onclick="resetQuiz()" style="margin-top: 4px;">
+                        🔄 Realizar el test de nuevo
+                    </button>
                 </div>
             </div>
         </div>
@@ -875,34 +873,6 @@
             q11: "a", q12: "b", q13: "a", q14: "c", q15: "b",
             q16: "c", q17: "a", q18: "b", q19: "a", q20: "b",
             q21: "b", q22: "b", q23: "a", q24: "a", q25: "b"
-        };
-
-        const questionTexts = {
-            q1: "Can I park here?",
-            q2: "What colour will you paint the children's bedroom?",
-            q3: "I can't understand this email.",
-            q4: "I'd like two tickets for tomorrow night.",
-            q5: "Shall we go to the gym now?",
-            q6: "His wife is a doctor, but he ________ optional job status.",
-            q7: "________ to the cinema tomorrow?",
-            q8: "I haven't seen my grandparents ________ last summer.",
-            q9: "This book is ________ than the one we read last week.",
-            q10: "If it rains tomorrow, we ________ the beach trip.",
-            q11: "I was driving home when I ________ a deer crossing the road.",
-            q12: "She asked me where I ________ living for the past two years.",
-            q13: "You ________ turn off your phone during the entire flight.",
-            q14: "I'm really looking forward ________ you at the conference.",
-            q15: "The new shopping mall ________ by the mayor last Monday.",
-            q16: "By the time we arrive at the theater, the movie ________.",
-            q17: "Neither of the candidates ________ suitable for the job position.",
-            q18: "Had I known about the delayed flight, I ________ earlier.",
-            q19: "Despite ________ very tired, she finished the report before midnight.",
-            q20: "The company regrets ________ customers that prices will increase next month.",
-            q21: "Seldom ________ such an inspiring speech delivered with such passion.",
-            q22: "It's high time we ________ discussing the contract terms.",
-            q23: "Not until the results were published ________ the magnitude of their research.",
-            q24: "The proposal was rejected on the ________ that it exceeded the budget.",
-            q25: "The manager insisted that the project ________ completed prior to Friday."
         };
 
         let currentPage = 1;
@@ -960,29 +930,12 @@
 
         function calculateResults() {
             let score = 0;
-            const reviewList = document.getElementById('review-list');
-            reviewList.innerHTML = '';
 
             for (let i = 1; i <= 25; i++) {
                 const key = 'q' + i;
                 const selected = document.querySelector(`input[name="${key}"]:checked`);
                 const userVal = selected ? selected.value : null;
-                const correctVal = correctAnswers[key];
-
-                const isCorrect = (userVal === correctVal);
-                if (isCorrect) score++;
-
-                // Build review item
-                const itemDiv = document.createElement('div');
-                itemDiv.className = `review-item ${isCorrect ? 'correct' : 'incorrect'}`;
-                itemDiv.innerHTML = `
-                    <div class="review-q">${i}. ${questionTexts[key]}</div>
-                    <div class="review-ans">
-                        Tu respuesta: <span>${userVal ? userVal.toUpperCase() : 'Sin responder'}</span> | 
-                        Respuesta correcta: <span>${correctVal.toUpperCase()}</span>
-                    </div>
-                `;
-                reviewList.appendChild(itemDiv);
+                if (userVal === correctAnswers[key]) score++;
             }
 
             // Hide form and navigation
@@ -1013,6 +966,10 @@
             document.getElementById('final-score').textContent = score;
             document.getElementById('cefr-level').textContent = `Nivel Estimado: ${level}`;
             document.getElementById('cefr-description').textContent = desc;
+
+            // Personalize WhatsApp link message with score and level
+            const waMsg = encodeURIComponent(`Hola, acabo de realizar la evaluación de inglés en línea. Mi resultado fue de ${score}/25 aciertos (${level}). Me gustaría solicitar información para contratar un módulo de clases.`);
+            document.getElementById('wa-btn-link').href = `https://wa.me/529581098287?text=${waMsg}`;
 
             document.getElementById('results-screen').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
