@@ -382,7 +382,7 @@
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
             padding: 1.5rem;
-            margin: 1.5rem 0 2.5rem 0;
+            margin: 1.5rem 0 2rem 0;
             text-align: left;
         }
 
@@ -396,12 +396,60 @@
             gap: 8px;
         }
 
+        .review-section {
+            margin: 2rem 0;
+            text-align: left;
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+        }
+
+        .review-item {
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 1rem;
+            background: #FAFAFA;
+            border: 1px solid var(--border-color);
+        }
+
+        .review-item.correct {
+            border-left: 4px solid var(--correct-color);
+            background: rgba(16, 185, 129, 0.06);
+        }
+
+        .review-item.incorrect {
+            border-left: 4px solid var(--wrong-color);
+            background: rgba(239, 68, 68, 0.06);
+        }
+
+        .review-q {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .review-ans {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .review-ans span {
+            font-weight: 700;
+        }
+
+        .correct-text {
+            color: #059669;
+        }
+
+        .user-text {
+            color: var(--text-primary);
+        }
+
         .results-actions {
             display: flex;
             flex-direction: column;
             gap: 12px;
             max-width: 480px;
-            margin: 0 auto;
+            margin: 2rem auto 0 auto;
         }
 
         footer {
@@ -846,6 +894,12 @@
                     </p>
                 </div>
 
+                <!-- Review Section with Option Letter + Complete Correct Text -->
+                <div class="review-section">
+                    <h3 class="page-title" style="font-size: 1.25rem; margin-bottom: 1rem;">Desglose de Respuestas y Frases Correctas</h3>
+                    <div id="review-list"></div>
+                </div>
+
                 <div class="results-actions">
                     <a id="wa-btn-link" href="https://wa.me/529581098287?text=Hola,%20hice%20el%20General%20English%20Test%20y%20me%20gustar%C3%ADa%20informaci%C3%B3n%20para%20contratar%20un%20m%C3%B3dulo." target="_blank" class="btn btn-wa">
                         💬 Contratar un Módulo por WhatsApp
@@ -867,12 +921,133 @@
     </footer>
 
     <script>
-        const correctAnswers = {
-            q1: "c", q2: "b", q3: "a", q4: "c", q5: "a",
-            q6: "b", q7: "c", q8: "a", q9: "a", q10: "b",
-            q11: "a", q12: "b", q13: "a", q14: "c", q15: "b",
-            q16: "c", q17: "a", q18: "b", q19: "a", q20: "b",
-            q21: "b", q22: "b", q23: "a", q24: "a", q25: "b"
+        // Map of options and correct full answers for each question
+        const quizData = {
+            q1: {
+                question: "Can I park here?",
+                correctVal: "c",
+                options: { a: "Sorry, I did that.", b: "It's the same place.", c: "Only for half an hour." }
+            },
+            q2: {
+                question: "What colour will you paint the children's bedroom?",
+                correctVal: "b",
+                options: { a: "I hope it was right.", b: "We can't decide.", c: "It wasn't very difficult." }
+            },
+            q3: {
+                question: "I can't understand this email.",
+                correctVal: "a",
+                options: { a: "Would you like some help?", b: "Don't you know?", c: "I suppose you can." }
+            },
+            q4: {
+                question: "I'd like two tickets for tomorrow night.",
+                correctVal: "c",
+                options: { a: "How much did you pay?", b: "Afternoon and evening.", c: "I'll just check for you." }
+            },
+            q5: {
+                question: "Shall we go to the gym now?",
+                correctVal: "a",
+                options: { a: "I'm too tired.", b: "It's very good.", c: "Not at all." }
+            },
+            q6: {
+                question: "His wife is a doctor, but he ________ optional job status.",
+                correctVal: "b",
+                options: { a: "isn't", b: "doesn't", c: "hasn't" }
+            },
+            q7: {
+                question: "________ to the cinema tomorrow?",
+                correctVal: "c",
+                options: { a: "We go", b: "Do we go", c: "Are we going" }
+            },
+            q8: {
+                question: "I haven't seen my grandparents ________ last summer.",
+                correctVal: "a",
+                options: { a: "since", b: "for", c: "from" }
+            },
+            q9: {
+                question: "This book is ________ than the one we read last week.",
+                correctVal: "a",
+                options: { a: "more interesting", b: "most interesting", c: "as interesting" }
+            },
+            q10: {
+                question: "If it rains tomorrow, we ________ the beach trip.",
+                correctVal: "b",
+                options: { a: "cancel", b: "will cancel", c: "would cancel" }
+            },
+            q11: {
+                question: "I was driving home when I ________ a deer crossing the road.",
+                correctVal: "a",
+                options: { a: "saw", b: "was seeing", c: "have seen" }
+            },
+            q12: {
+                question: "She asked me where I ________ living for the past two years.",
+                correctVal: "b",
+                options: { a: "have been", b: "had been", c: "was" }
+            },
+            q13: {
+                question: "You ________ turn off your phone during the entire flight.",
+                correctVal: "a",
+                options: { a: "must", b: "ought", c: "need" }
+            },
+            q14: {
+                question: "I'm really looking forward ________ you at the conference.",
+                correctVal: "c",
+                options: { a: "to meet", b: "meeting", c: "to meeting" }
+            },
+            q15: {
+                question: "The new shopping mall ________ by the mayor last Monday.",
+                correctVal: "b",
+                options: { a: "opened", b: "was opened", c: "has opened" }
+            },
+            q16: {
+                question: "By the time we arrive at the theater, the movie ________.",
+                correctVal: "c",
+                options: { a: "will start", b: "starts", c: "will have started" }
+            },
+            q17: {
+                question: "Neither of the candidates ________ suitable for the job position.",
+                correctVal: "a",
+                options: { a: "seems", b: "seem", c: "are seeming" }
+            },
+            q18: {
+                question: "Had I known about the delayed flight, I ________ earlier.",
+                correctVal: "b",
+                options: { a: "wouldn't leave", b: "wouldn't have left", c: "didn't leave" }
+            },
+            q19: {
+                question: "Despite ________ very tired, she finished the report before midnight.",
+                correctVal: "a",
+                options: { a: "being", b: "of being", c: "she was" }
+            },
+            q20: {
+                question: "The company regrets ________ customers that prices will increase next month.",
+                correctVal: "b",
+                options: { a: "informing", b: "to inform", c: "inform" }
+            },
+            q21: {
+                question: "Seldom ________ such an inspiring speech delivered with such passion.",
+                correctVal: "b",
+                options: { a: "I have heard", b: "have I heard", c: "I heard" }
+            },
+            q22: {
+                question: "It's high time we ________ discussing the contract terms.",
+                correctVal: "b",
+                options: { a: "start", b: "started", c: "will start" }
+            },
+            q23: {
+                question: "Not until the results were published ________ the magnitude of their research.",
+                correctVal: "a",
+                options: { a: "did they realize", b: "they realized", c: "they had realized" }
+            },
+            q24: {
+                question: "The proposal was rejected on the ________ that it exceeded the budget.",
+                correctVal: "a",
+                options: { a: "grounds", b: "reasons", c: "cause" }
+            },
+            q25: {
+                question: "The manager insisted that the project ________ completed prior to Friday.",
+                correctVal: "b",
+                options: { a: "is", b: "be", c: "was" }
+            }
         };
 
         let currentPage = 1;
@@ -896,15 +1071,10 @@
             const newPage = currentPage + delta;
             if (newPage < 1 || newPage > totalPages) return;
 
-            // Hide current page
             document.querySelector(`.page-block[data-page="${currentPage}"]`).classList.remove('active');
-            
             currentPage = newPage;
-
-            // Show new page
             document.querySelector(`.page-block[data-page="${currentPage}"]`).classList.add('active');
 
-            // Update UI elements
             updateProgress();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -915,7 +1085,6 @@
             document.getElementById('completion-percentage').textContent = `${percent}% Completado`;
             document.getElementById('progress-bar').style.width = `${percent}%`;
 
-            // Buttons state
             document.getElementById('btn-prev').disabled = (currentPage === 1);
             
             const nextBtn = document.getElementById('btn-next');
@@ -930,12 +1099,31 @@
 
         function calculateResults() {
             let score = 0;
+            const reviewList = document.getElementById('review-list');
+            reviewList.innerHTML = '';
 
             for (let i = 1; i <= 25; i++) {
                 const key = 'q' + i;
+                const data = quizData[key];
                 const selected = document.querySelector(`input[name="${key}"]:checked`);
                 const userVal = selected ? selected.value : null;
-                if (userVal === correctAnswers[key]) score++;
+
+                const isCorrect = (userVal === data.correctVal);
+                if (isCorrect) score++;
+
+                const userText = userVal ? `(${userVal.toUpperCase()}) "${data.options[userVal]}"` : 'Sin responder';
+                const correctText = `(${data.correctVal.toUpperCase()}) "${data.options[data.correctVal]}"`;
+
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `review-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                itemDiv.innerHTML = `
+                    <div class="review-q">${i}. ${data.question}</div>
+                    <div class="review-ans">
+                        Tu respuesta: <span class="user-text">${userText}</span><br>
+                        Respuesta correcta: <span class="correct-text">${correctText}</span>
+                    </div>
+                `;
+                reviewList.appendChild(itemDiv);
             }
 
             // Hide form and navigation
